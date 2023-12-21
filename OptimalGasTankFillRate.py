@@ -74,7 +74,11 @@ def find_optimal_cost(
 
 
 def main():
-    minitues_to_travel_and_back = 15
+    minitues_to_travel_and_back = float(
+        input(
+            "How many minutes does it take to go to gas station and come back for you or in general when you have to go because you are low on gas if there is none on the route you are heading?: "
+        )
+    )
     # Get user inputs
     (
         full_tank_cost,
@@ -108,29 +112,41 @@ def main():
     if hourly_wage > 2500:  # 500000 in monthly wage
         print(f"Get a driver bro")
     elif EOQ < full_tank_cost:
+        N = D / EOQ
+        if_not = D / full_tank_cost
         print(
             f"So you must pay: {EOQ} {currency} to achive the optimal amount of gas in your tank this equates to {EOQ/full_tank_cost} of a full tank."
         )
         print(
-            f"Which is {hourly_wage * (full_tank_cost - EOQ) / 12 / avg_months_last} {currency} per year as a result of this strategy in terms of eliminating opportunity cost"
+            f"Which is {hourly_wage * (((full_tank_cost - EOQ) / 12 / avg_months_last/ 400) + ((N+minitues_to_travel_and_back)*(minitues_to_travel_and_back/60))-((if_not+2)*(minitues_to_travel_and_back/60)))} {currency} per year as a result of this strategy in terms of eliminating opportunity cost"
         )
-        N = D / EOQ
-        if_not = D / full_tank_cost
+
         print(
             f"Number of visits to gas station in a year if we follow this strategy {N}"
         )
         print(
-            f"Number of hours spent at gas station if we follow this strategy {(N+2)*(minitues_to_travel_and_back/60)}"  # 15 minutes spent in gas station to fill the tank and 2 minutes on average to go to gas station because we decide to get gas on the go so no return time
+            f"Number of hours spent at gas station if we follow this strategy {(if_not+2)*(minitues_to_travel_and_back/60)}"  # 15 minutes spent in gas station to fill the tank and 2 minutes on average to go to gas station because we decide to get gas on the go so no return time
         )
         print(
             f"\nIf you fill your tank fully, you would have {if_not} visits to gas station in a year"
         )
         print(
-            f"Number of hours spent at gas station if you fill your tank fully {if_not*minitues_to_travel_and_back/60}"
-            f"\n{minitues_to_travel_and_back*(if_not*minitues_to_travel_and_back/60)} hours spend to go to gas station if you fill your tank fully when emptied"
-            f"\nTotal {(if_not+(if_not*minitues_to_travel_and_back))*(minitues_to_travel_and_back/60)} hours spend to go to gas station and to fill if you fill your tank fully when emptied"
-            f"\nThis much hour can be saved if you buy gas the optimal amount when you see a gas station: {((if_not+(if_not*minitues_to_travel_and_back))*(minitues_to_travel_and_back/60))-(N+2)*(minitues_to_travel_and_back/60)}"
+            f"Number of hours spent at gas station if you fill your tank fully {N*minitues_to_travel_and_back/60}"
+            f"\n{minitues_to_travel_and_back*(N*minitues_to_travel_and_back/60)} hours spend to go to gas station if you fill your tank fully when emptied"
+            f"\nTotal {(N+minitues_to_travel_and_back)*(minitues_to_travel_and_back/60)} hours spend to go to gas station and to fill if you fill your tank fully when emptied"
         )
+        if ((N + minitues_to_travel_and_back) * (minitues_to_travel_and_back / 60)) - (
+            (if_not + 2) * (minitues_to_travel_and_back / 60)
+        ) > 0:
+            print(
+                f"\nThis many hours can be saved if you buy gas the optimal amount when you see a gas station: {((N+minitues_to_travel_and_back)*(minitues_to_travel_and_back/60))-((if_not+2)*(minitues_to_travel_and_back/60))}"
+            )
+            print(
+                f"Which is {hourly_wage * (((full_tank_cost - EOQ) / 12 / avg_months_last/400) + ((N+minitues_to_travel_and_back)*(minitues_to_travel_and_back/60))-((if_not+2)*(minitues_to_travel_and_back/60)))} {currency} per year as a result of this strategy in terms of eliminating opportunity cost"
+            )
+        else:
+            pass
+
         print(
             f"\nSo you will go to gas station to fill your tank {if_not} times at minimum and each time you go should buy minumum {EOQ} {currency} of gas each time"
         )
