@@ -153,6 +153,9 @@ def main():
         print(
             f"\nAfter your tank fullness level drops to {1-(EOQ/full_tank_cost)} you shuld stop and fill at least {EOQ} {currency} of gas each time\n"
         )
+        print(
+            f"If fullness drops below {((1-(EOQ/full_tank_cost))*((1-(EOQ/full_tank_cost)))+((0.05)*(1-(EOQ/full_tank_cost))))} just fill your tank fully"
+        )
     else:
         print(f"You should always fill your tank fully.")
 
