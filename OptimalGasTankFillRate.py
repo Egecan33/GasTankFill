@@ -105,7 +105,7 @@ def main():
     print(f"Annual Demand (D): {D} {currency}")
 
     print(f"Oportunity Cost (H): {H} {currency}")
-    if hourly_wage > 5000:
+    if hourly_wage > 2500:  # 500000 in monthly wage
         print(f"Get a driver bro")
     elif EOQ < full_tank_cost:
         print(
