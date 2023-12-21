@@ -27,13 +27,18 @@ def get_user_inputs():
 
 
 def find_optimal_cost(
-    full_tank_cost, avg_months_last, interest_rate, hourly_wage, tolerance
+    full_tank_cost,
+    avg_months_last,
+    interest_rate,
+    hourly_wage,
+    tolerance,
+    minitues_to_travel_and_back,
 ):
     # Calculate initial EOQ
     D = (12 / avg_months_last) * full_tank_cost  # Annual demand
     S = full_tank_cost  # Initial cost per order
     H = (
-        ((full_tank_cost / 400) + (hourly_wage / 4))
+        ((full_tank_cost / 400) + (hourly_wage / (60 / minitues_to_travel_and_back)))
         * (1 / interest_rate) ** (12**0.5)
     ) * (
         interest_rate / 2
@@ -69,6 +74,7 @@ def find_optimal_cost(
 
 
 def main():
+    minitues_to_travel_and_back = 15
     # Get user inputs
     (
         full_tank_cost,
@@ -85,6 +91,7 @@ def main():
         annual_interest_rate,
         hourly_wage,
         tolerance=0.01,
+        minitues_to_travel_and_back=minitues_to_travel_and_back,
     )
 
     # Print the inputs
@@ -105,9 +112,6 @@ def main():
             f"So you must pay: {EOQ} {currency} to achive the optimal amount of gas in your tank this equates to {EOQ/full_tank_cost} of a full tank."
         )
         print(
-            f"You will save {(full_tank_cost - EOQ) * (12 / avg_months_last)} {currency}  per year as a result of this strategy in terms of eliminating opportunity cost"
-        )
-        print(
             f"Which is {hourly_wage * (full_tank_cost - EOQ) / 12 / avg_months_last} {currency} per year as a result of this strategy in terms of eliminating opportunity cost"
         )
         N = D / EOQ
@@ -116,18 +120,23 @@ def main():
             f"Number of visits to gas station in a year if we follow this strategy {N}"
         )
         print(
-            f"Number of hours spent at gas station if we follow this strategy {N*15/60}"
+            f"Number of hours spent at gas station if we follow this strategy {(N+2)*(minitues_to_travel_and_back/60)}"  # 15 minutes spent in gas station to fill the tank and 2 minutes on average to go to gas station because we decide to get gas on the go so no return time
         )
         print(
             f"\nIf you fill your tank fully, you would have {if_not} visits to gas station in a year"
         )
         print(
-            f"Number of hours spent at gas station if you fill your tank fully {if_not*15/60}"
+            f"Number of hours spent at gas station if you fill your tank fully {if_not*minitues_to_travel_and_back/60}"
+            f"\n{minitues_to_travel_and_back*(if_not*minitues_to_travel_and_back/60)} hours spend to go to gas station if you fill your tank fully when emptied"
+            f"\nTotal {(if_not+(if_not*minitues_to_travel_and_back))*(minitues_to_travel_and_back/60)} hours spend to go to gas station and to fill if you fill your tank fully when emptied"
+            f"\nThis much hour can be saved if you buy gas the optimal amount when you see a gas station: {((if_not+(if_not*minitues_to_travel_and_back))*(minitues_to_travel_and_back/60))-(N+2)*(minitues_to_travel_and_back/60)}"
         )
         print(
-            f"\nSo you will go to gas station to fill your tank {if_not} times at minimum and each time you go should buy minumum {EOQ} {currency} of gas each time\n"
+            f"\nSo you will go to gas station to fill your tank {if_not} times at minimum and each time you go should buy minumum {EOQ} {currency} of gas each time"
         )
-
+        print(
+            f"\nAfter your tank fullness level drops to {1-(EOQ/full_tank_cost)} you shuld stop and fill at least {EOQ} {currency} of gas each time\n"
+        )
     else:
         print(f"You should always fill your tank fully.")
 
