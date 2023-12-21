@@ -98,8 +98,9 @@ def main():
     print(f"Annual Demand (D): {D} {currency}")
 
     print(f"Oportunity Cost (H): {H} {currency}")
-
-    if EOQ < full_tank_cost:
+    if hourly_wage > 5000:
+        print(f"Get a driver bro")
+    elif EOQ < full_tank_cost:
         print(
             f"So you must pay: {EOQ} {currency} to achive the optimal amount of gas in your tank this equates to {EOQ/full_tank_cost} of a full tank."
         )
